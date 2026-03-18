@@ -1,0 +1,239 @@
+﻿@model PaginatedResult<ConsultationDetail>
+
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Consultations";
+}
+
+@section LayoutScripts {
+    <link rel="stylesheet" href="~/assets/css/flatpickr.min.css">
+    <script src="~/assets/js/flatpickr.min.js"></script>
+}
+
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 stagger-1">
+    <div>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Consultation Logs</h1>
+        <p class="text-slate-500 mt-1 font-medium">Record and review patient clinical visits.</p>
+    </div>
+    @if (User.IsInRole("Admin") || User.IsInRole("Attending"))
+    {
+        <a asp-controller="Consultations" asp-action="Create" class="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-6 rounded-xl shadow-[0_8px_15px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_25px_rgba(0,0,0,0.2)] transition-all active:scale-95">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+            Log New Consultation
+        </a>
+    }
+    
+</div>
+
+<form asp-action="Index" method="get">
+    <div class="bg-white p-4 rounded-[1.25rem] shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row gap-4 stagger-2 relative z-30">
+
+        <div class="flex-1 relative">
+            <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input name="s" type="text" value="@Model.SearchKeyword" placeholder="Search by patient name, diagnosis..." class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium placeholder-slate-400">
+        </div>
+
+        <div class="relative w-full md:w-48">
+            <input name="a" type="text" value="@Model.SecondarySearchKeyword" id="filter-date-picker" class="w-full py-2.5 pl-4 pr-10 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all cursor-pointer" placeholder="Filter by Date" readonly>
+            <svg class="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        </div>
+
+        @* <div x-data="{
+            open: false,
+            selected: '',
+            label: 'All Personnel',
+            options: [
+                { val: '', text: 'All Personnel' },
+                { val: 'Dr. Reyes', text: 'Dr. Reyes' },
+                { val: 'Midwife Sarah', text: 'Midwife Sarah' },
+                { val: 'Jane Doe', text: 'Jane Doe' }
+            ]
+        }" class="relative w-full md:w-56">
+            <input type="hidden" name="attending_filter" :value="selected">
+
+            <button type="button" x-on:click="open = !open" x-on:click.outside="open = false"
+                    class="w-full py-2.5 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all text-left flex justify-between items-center h-[42px]"
+                    :class="open ? 'ring-2 ring-emerald-500/20 border-emerald-500 bg-white' : ''">
+                <span x-text="label"></span>
+                <svg class="w-4 h-4 text-slate-400 transition-transform duration-300" :class="open ? 'rotate-180 text-emerald-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+
+            <div x-show="open"
+                    x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                    x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                    class="alpine-dropdown-menu absolute right-0 left-0 md:left-auto mt-2 md:w-56 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-xl overflow-hidden" style="display: none;">
+                <ul class="py-1">
+                    <template x-for="option in options" :key="option.val">
+                        <li x-on:click="selected = option.val; label = option.text; open = false"
+                            class="px-4 py-2.5 text-sm cursor-pointer transition-colors flex items-center justify-between"
+                            :class="selected === option.val ? 'bg-emerald-50 text-emerald-700 font-bold' : 'text-slate-600 font-medium hover:bg-slate-50 hover:text-slate-900'">
+                            <span x-text="option.text"></span>
+                            <svg x-show="selected === option.val" class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </div> *@
+
+        <div class="relative w-full md:w-48">
+            <button class="w-full flex-1 sm:flex-none h-10 px-4 inline-flex justify-center items-center border border-slate-200 rounded-lg text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 transition-colors">Search</button>
+        </div>
+
+    </div>
+</form>
+
+<div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-200 overflow-hidden stagger-2 relative z-20">
+    <div class="overflow-x-auto w-full">
+        <table class="w-full text-left border-collapse">
+            <thead class="hidden md:table-header-group">
+                <tr class="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-100">
+                    <th class="px-6 py-4 font-bold">Patient</th>
+                    <th class="px-6 py-4 font-bold">Date & Time</th>
+                    <th class="px-6 py-4 font-bold">Chief Complaint</th>
+                    <th class="px-6 py-4 font-bold">Attending</th>
+                    <th class="px-6 py-4 font-bold text-center">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y divide-slate-100 text-sm font-medium text-slate-700 flex flex-col md:table-row-group">
+                @if(Model is not null)
+                {
+                    @foreach (var consultation in Model.Result)
+                    {
+                        <tr class="flex flex-col md:table-row hover:bg-slate-50 transition-colors group cursor-default p-5 md:p-0">
+
+                            <td class="order-1 md:order-none md:px-6 md:py-4 mb-4 md:mb-0 border-b border-slate-50 md:border-none pb-4 md:pb-0">
+                                <div class="flex items-center gap-4 md:gap-3">
+                                    <div class="w-12 h-12 md:w-8 md:h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg md:text-xs shrink-0">MD</div>
+                                    <div>
+                                        <p class="text-slate-900 font-bold text-base md:text-sm">@consultation.PatientInfo.FirstName @consultation.PatientInfo.LastName</p>
+                                        <p class="text-slate-500 text-xs font-semibold md:font-normal mt-0.5">ID: @consultation.PatientPersonalInformationId</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="order-2 md:order-none md:px-6 md:py-4 mb-2 md:mb-0 flex justify-between md:table-cell items-center">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider md:hidden">Date</span>
+                                <div class="text-right md:text-left">
+                                    <p class="font-bold md:font-bold text-slate-900">@DateTime.Parse(consultation.DateofVisit).ToString("MMM dd, yyyy")</p>
+                                    @* <p class="text-slate-500 md:text-slate-400 text-xs mt-0.5">@DateTime.Parse(consultation.DateofVisit).ToString("HH:mm");</p> *@
+                                </div>
+                            </td>
+
+                            <td class="order-3 md:order-none md:px-6 md:py-4 mb-2 md:mb-0 flex justify-between md:table-cell items-center">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider md:hidden">Diagnosis</span>
+                                <div class="text-right md:text-left">
+                                    <p class="font-medium md:font-normal text-slate-900">
+                                        @(consultation.ConsultationPrescription.Diagnosis?.Length > 30
+                                            ? consultation.ConsultationPrescription.Diagnosis.Substring(0, 30) + "..." 
+                                            : consultation.ConsultationPrescription.Diagnosis)
+                                    </p>
+                                    <p class="text-emerald-600 text-xs mt-0.5 font-bold">Normal</p>
+                                </div>
+                            </td>
+
+                            <td class="order-4 md:order-none md:px-6 md:py-4 mb-5 md:mb-0 flex justify-between md:table-cell items-center">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider md:hidden">Attending</span>
+                                <div class="text-right md:text-left">
+                                    <p class="font-bold md:font-normal text-slate-700 md:text-slate-600">Midwife Sarah</p>
+                                </div>
+                            </td>
+
+                            <td class="order-5 md:order-none md:px-6 md:py-4 border-t border-slate-100 md:border-none pt-4 md:pt-0">
+                                <div class="flex justify-between md:justify-center items-center gap-3 md:gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
+
+                                    <a asp-controller="Consultations" asp-action="ViewConsultation" asp-route-id="@consultation.Id" class="flex-1 md:flex-none flex justify-center items-center gap-2 p-2.5 md:p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors font-bold md:font-normal text-sm" title="View Details">
+                                        <svg class="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                        <span class="md:hidden">View Record</span>
+                                    </a>
+                                    @* <button x-on:click="showDeleteModal = true" class="flex-1 md:flex-none flex justify-center items-center gap-2 p-2.5 md:p-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors font-bold md:font-normal text-sm" title="Delete">
+                                        <svg class="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        <span class="md:hidden">Delete</span>
+                                    </button> *@
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                } else
+                {
+                    <p>Curently has no consultations.</p>
+                }
+
+                
+            </tbody>
+        </table>
+    </div>
+
+    @{
+        var pageActive = "flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-slate-200 rounded-lg text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 transition-colors";
+        var pageInactive = "flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-slate-200 rounded-lg text-sm font-bold text-slate-400 bg-white cursor-not-allowed";
+    }
+    <div class="px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between bg-slate-50/50 gap-4 sm:gap-0">
+        <p class="text-sm text-slate-500 font-medium">Showing 1 to @Model.Result.Count() of @Model.TotalRecords patients</p>
+        <div class="flex gap-2 w-full sm:w-auto">
+            <a asp-route-p="@(Model.Page - 1)" asp-route-s="@Model.SearchKeyword" asp-route-a="@Model.SecondarySearchKeyword" class="@(Model.Page == 1 ? pageInactive : pageActive)">
+                Prev
+            </a>
+
+            @for (var pageNumber = 1; pageNumber <= Model.TotalCount; pageNumber++)
+            {
+                if (pageNumber == Model.Page)
+                {
+                    <span class="@pageInactive">
+                        @pageNumber
+                    </span>
+                }
+                else
+                {
+                    <a asp-route-p="@pageNumber" asp-route-s="@Model.SearchKeyword" asp-route-a="@Model.SecondarySearchKeyword" class="@pageActive">
+                        @pageNumber
+                    </a>
+                }
+            }
+
+            <a asp-route-p="@(Model.Page + 1)" asp-route-s="@Model.SearchKeyword" asp-route-a="@Model.SecondarySearchKeyword" class="@(Model.Page == Model.TotalCount ? pageInactive : pageActive)">
+                Next
+            </a>
+        </div>
+    </div>
+
+</div>
+
+
+    
+
+@section Scripts {
+    <div x-show="showDeleteModal" style="display: none;" class="relative z-50">
+        <div x-show="showDeleteModal" x-transition.opacity class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div x-show="showDeleteModal" x-on:click.away="showDeleteModal = false" x-transition class="relative transform overflow-hidden rounded-[1.5rem] bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-md border border-slate-100">
+                    <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                            </div>
+                            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                <h3 class="text-lg font-extrabold leading-6 text-slate-900">Delete Consultation Log</h3>
+                                <div class="mt-2">
+                                    <p class="text-sm text-slate-500 font-medium">Are you sure you want to delete this consultation record? <span class="font-bold text-red-500">This action cannot be undone.</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 px-4 py-4 sm:flex sm:flex-row-reverse sm:px-6 border-t border-slate-100">
+                        <button type="button" x-on:click="showDeleteModal = false" class="inline-flex w-full justify-center rounded-xl bg-red-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto transition-colors">Delete Log</button>
+                        <button type="button" x-on:click="showDeleteModal = false" class="mt-3 inline-flex w-full justify-center rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm border border-slate-200 hover:bg-slate-50 sm:mt-0 sm:w-auto transition-colors">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/assets/js/main.js"></script>
+}
+    

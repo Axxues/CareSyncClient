@@ -1,0 +1,88 @@
+﻿@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Reports";
+}
+
+@section LayoutScripts {
+    <link rel="stylesheet" href="~/assets/css/flatpickr.min.css">
+    <script src="~/assets/js/flatpickr.min.js"></script>
+}
+
+<div class="mb-8 stagger-1">
+    <a asp-controller="Reports" asp-action="Index" class="inline-flex items-center text-sm font-bold text-slate-400 hover:text-emerald-600 transition-colors mb-4">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Back to Analytics
+    </a>
+    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">FHSIS Report Generator</h1>
+    <p class="text-slate-500 mt-1 font-medium">Generate standard DOH healthcare indicators for government reporting.</p>
+</div>
+
+<div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-200 p-6 sm:p-8 stagger-2">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+        <div x-data="{ open: false, selected: '', label: 'Select Quarter...', options: [{val:'Q1', text:'1st Quarter (Jan-Mar)'}, {val:'Q2', text:'2nd Quarter (Apr-Jun)'}, {val:'Q3', text:'3rd Quarter (Jul-Sep)'}, {val:'Q4', text:'4th Quarter (Oct-Dec)'}] }" class="relative z-30">
+            <label class="block text-sm font-bold text-slate-600 mb-2">Reporting Period</label>
+            <button type="button" x-on:click ="open = !open" class="w-full px-4 py-3 rounded-xl border-[1.5px] border-slate-200 bg-slate-50 text-slate-900 font-medium focus:outline-none focus:border-emerald-500 transition-colors text-left flex justify-between items-center h-[46px]" :class="open ? 'ring-4 ring-emerald-500/20 border-emerald-500 bg-white' : ''">
+                <span x-text="label" :class="selected === '' ? 'text-slate-400' : 'text-slate-900'"></span>
+                <svg class="w-5 h-5 transition-transform duration-300" :class="open ? 'rotate-180 text-emerald-500' : 'text-slate-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div x-show="open" x-on:click.outside="open = false"
+                    x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                    x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                    class="alpine-dropdown-menu absolute left-0 right-0 mt-2 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-[1rem] shadow-2xl z-50 overflow-hidden" style="display: none;">
+                <ul class="py-2">
+                    <template x-for="opt in options">
+                        <li x-on:click="selected=opt.val; label=opt.text; open=false" class="px-5 py-3 hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer text-sm font-medium transition-colors" x-text="opt.text"></li>
+                    </template>
+                </ul>
+            </div>
+        </div>
+
+        <div class="relative z-20">
+            <label class="block text-sm font-bold text-slate-600 mb-2">Reporting Year</label>
+            <input type="number" value="2026" class="w-full px-4 py-3 rounded-xl border-[1.5px] border-slate-200 bg-slate-50 text-slate-900 font-medium focus:outline-none focus:border-emerald-500 focus:bg-white transition-colors">
+        </div>
+
+    </div>
+
+    <div class="space-y-4">
+        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Included Indicators</h3>
+
+        <label class="flex items-center gap-4 p-5 rounded-2xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+            <input type="checkbox" checked class="w-5 h-5 accent-emerald-500 rounded text-emerald-600 focus:ring-emerald-500 border-gray-300">
+            <div>
+                <p class="font-bold text-slate-900 text-base">Maternal Health (M1/M2)</p>
+                <p class="text-sm text-slate-500 font-medium mt-0.5">Antenatal care, Postpartum care, and Deliveries.</p>
+            </div>
+        </label>
+
+        <label class="flex items-center gap-4 p-5 rounded-2xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+            <input type="checkbox" checked class="w-5 h-5 accent-emerald-500 rounded text-emerald-600 focus:ring-emerald-500 border-gray-300">
+            <div>
+                <p class="font-bold text-slate-900 text-base">Child Care (C1/C2)</p>
+                <p class="text-sm text-slate-500 font-medium mt-0.5">Immunization status and Vitamin A supplementation.</p>
+            </div>
+        </label>
+    </div>
+
+    <div class="mt-10 flex flex-col sm:flex-row gap-4">
+        <button x-on:click="loading = true; setTimeout(() => loading = false, 2000)" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3">
+            <svg x-show="!loading" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <svg x-show="loading" class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            <span x-text="loading ? 'Generating Report...' : 'Export PDF Report'"></span>
+        </button>
+        <button class="px-8 py-4 bg-white border-2 border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-colors flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            Export Excel
+        </button>
+    </div>
+</div>
+
+
+    @section Scripts {
+        <script src="~/assets/js/main.js"></script>
+    }

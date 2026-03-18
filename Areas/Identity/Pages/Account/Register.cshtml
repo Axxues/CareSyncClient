@@ -1,0 +1,416 @@
+﻿@page
+@model RegisterModel
+@{
+    Layout = "_LoginLayout";
+    ViewData["Title"] = "Register";
+}
+
+@section LayoutScripts {
+    <link rel="stylesheet" href="~/assets/css/flatpickr.min.css">
+    <script src="~/assets/js/flatpickr.min.js"></script>
+}
+
+@* <h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>Create a new account.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <label asp-for="Input.Email">Email</label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label asp-for="Input.Password">Password</label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        </form>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+        <section>
+            <h3>Use another service to register.</h3>
+            <hr />
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                    <div>
+                        <p>
+                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
+                            about setting up this ASP.NET application to support logging in via external services</a>.
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} *@
+
+<div class="hidden lg:flex lg:w-[40%] relative bg-slate-900 overflow-hidden group">
+    <img src="~/assets/imgs/img-1.avif" class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay animate-pan transform origin-center" alt="Modern Healthcare Center">
+    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden mix-blend-screen opacity-90">
+        <div class="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-emerald-500/60 rounded-full filter blur-[100px] animate-blob"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-teal-400/50 rounded-full filter blur-[100px] animate-blob animation-delay-4000"></div>
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/95 via-emerald-800/80 to-slate-900/90 z-10 transition-opacity duration-700 group-hover:opacity-80"></div>
+    <div class="absolute inset-0 z-20 flex flex-col justify-center p-10 xl:p-14 text-white">
+        <div class="backdrop-blur-xl bg-white/10 border border-white/20 p-8 rounded-[1.5rem] transform transition-all duration-500 hover:-translate-y-2 hover:bg-white/15 hover:shadow-2xl hover:border-white/30 cursor-default animate-slideUpFade">
+            <div class="flex gap-2 mb-5">
+                <span class="w-10 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]"></span>
+                <span class="w-3 h-1.5 rounded-full bg-emerald-400/50"></span>
+                <span class="w-3 h-1.5 rounded-full bg-emerald-400/25"></span>
+            </div>
+            <h2 class="text-3xl font-extrabold mb-3 leading-tight tracking-tight text-white drop-shadow-sm">Role-Based<br>Access Control.</h2>
+            <p class="text-emerald-50 text-sm leading-relaxed opacity-90 font-medium mb-6">To maintain strict compliance with data privacy regulations, all new staff accounts must be manually verified and approved by the Rural Health Midwife.</p>
+            <div class="flex flex-wrap gap-3">
+                <div class="px-3 py-2 rounded-xl bg-emerald-900/40 text-xs font-semibold border border-emerald-400/30 backdrop-blur-sm flex items-center gap-2 shadow-sm">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg> Secure Staff Verification
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="w-full lg:w-[60%] flex flex-col justify-center items-center p-4 sm:p-6 lg:p-12 relative z-20 lg:bg-white lg:shadow-[-30px_0_60px_rgba(0,0,0,0.05)] transition-all duration-500 overflow-hidden min-h-screen lg:min-h-0">
+    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-80 lg:hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-200/60 rounded-full mix-blend-multiply filter blur-[80px] animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-teal-200/50 rounded-full mix-blend-multiply filter blur-[80px] animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-green-200/50 rounded-full mix-blend-multiply filter blur-[80px] animate-blob animation-delay-4000"></div>
+    </div>
+
+    <div class="hidden lg:flex absolute top-8 left-8 xl:left-12 items-center gap-3 hover:scale-105 transition-transform cursor-pointer z-50">
+        <div class="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center shadow-sm border border-emerald-100 overflow-hidden">
+            <img src="~/assets/imgs/logo.jpg" alt="Logo" class="w-6 h-6 object-contain">
+        </div>
+        <span class="font-extrabold text-xl text-slate-800 tracking-tight">CareSync<span class="text-emerald-500">.</span></span>
+    </div>
+
+    <div class="w-full max-w-[420px] relative z-20 bg-white/95 backdrop-blur-xl lg:bg-transparent lg:backdrop-blur-none p-5 sm:p-8 lg:p-0 rounded-3xl lg:rounded-none shadow-2xl lg:shadow-none border border-white/60 lg:border-none">
+            
+        <div x-data="{ 
+        dropdownOpen: false,
+        dropdownSelected: '',
+        dropdownLabel: '',
+        dropdownTouched: false,
+        get isDropdownValid() { return this.dropdownSelected !== ''; },
+        dropdownOptions: [
+            { val: 'Encoder', text: 'Encoder' },
+            { val: 'Admin', text: 'Admin' },
+            { val: 'Attending', text: 'Attending' }
+        ],
+
+        email: '', password: '', confirm: '', 
+        showPass: false, showConfirm: false, loading: false, shakeError: false, globalError: true,
+        nameTouched: false, emailTouched: false, passTouched: false, confirmTouched: false,
+       
+        get isEmailValid() { return /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(this.email); },
+        get isPassValid() { return this.password.length >= 8; },
+        get isPassMatch() { return this.password !== '' && this.password === this.confirm; },
+        
+        get passStrength() {
+            let score = 0;
+            if (this.password.length >= 8) score++;
+            if (/[A-Z]/.test(this.password)) score++;
+            if (/[0-9]/.test(this.password)) score++;
+            if (/[^A-Za-z0-9]/.test(this.password)) score++;
+            return score;
+        },
+
+        submitForm() {
+            // 1. Trigger all touched states (including dropdown) so red errors appear!
+            this.nameTouched = this.emailTouched = this.passTouched = this.confirmTouched = true;
+            this.dropdownTouched = true; 
+            this.globalError = false; 
+
+            // 2. Prevent submission if ANY field (including dropdown) is invalid
+            if (!this.isEmailValid || !this.isPassValid || !this.isPassMatch || !this.isDropdownValid) {
+                this.shakeError = true;
+                setTimeout(() => this.shakeError = false, 400); 
+                return;
+            }
+            
+            // 3. Submit if everything is valid
+            this.loading = true; 
+            setTimeout(() => $el.querySelector('form').submit(), 2000);
+        }
+    }">
+                
+            <div class="flex lg:hidden justify-center items-center gap-2 hover:scale-105 transition-transform cursor-pointer z-20 mb-5 stagger-1">
+                <div class="w-8 h-8 sm:w-9 sm:h-9 bg-emerald-100/80 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-sm border border-emerald-200 overflow-hidden">
+                    <img src="~/assets/imgs/logo.jpg" alt="Logo" class="w-5 h-5 sm:w-6 sm:h-6 object-contain">
+                </div>
+                <span class="font-extrabold text-lg sm:text-xl text-slate-800 tracking-tight">CareSync<span class="text-emerald-500">.</span></span>
+            </div>
+
+            <div class="mb-5 lg:mb-8 stagger-1 text-center lg:text-left">
+                <h1 class="text-xl sm:text-3xl font-extrabold text-slate-900 mb-1.5 sm:mb-2 tracking-tight drop-shadow-sm">Request Access</h1>
+                <p class="text-slate-500 text-[13px] sm:text-sm leading-snug">Submit your details. Your account requires <span class="font-semibold text-emerald-600">admin approval</span> before activation.</p>
+            </div>
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div x-show="globalError" style="display: none;"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 -translate-y-4 scale-95"
+                    x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave-end="opacity-0 -translate-y-4 scale-95"
+                    class="mb-6 p-4 bg-red-50/80 backdrop-blur-sm border border-red-200 rounded-[14px] flex items-start gap-3 shadow-sm">
+                    
+                    <div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77-1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-[14px] font-extrabold text-red-800 tracking-tight">Registration Failed</h3>
+                        <div asp-validation-summary="ModelOnly" class="text-[13px] text-red-600 mt-0.5 font-medium leading-relaxed"></div>
+                    </div>
+                    <button type="button" x-on:click="globalError = false" class="text-red-400 hover:text-red-700 transition-colors p-1 rounded-lg hover:bg-red-100/50">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            }
+
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" x-on:submit.prevent="submitForm()" class="space-y-4" :class="{'animate-error-shake': shakeError}">
+
+                <div class="stagger-2" x-data="{ name: '', nameTouched: false, get isNameValid() { return this.name.trim().length >= 3 } }">
+                    <div class="relative group">
+                        <input asp-for="Input.Username" type="text" id="username" 
+                               x-model.fill="name" 
+                               x-on:input="nameTouched = true" 
+                               x-on:blur="nameTouched = true" 
+                               placeholder=" "
+                               class="floating-input peer w-full px-4 pt-4 sm:pt-4 pb-1 h-[48px] sm:h-[50px] rounded-[14px] border-2 bg-white text-slate-900 text-[13px] sm:text-[14px] focus:outline-none transition-all duration-300 placeholder-transparent"
+                               :class="{
+                                'border-emerald-500 bg-emerald-50/30 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)]': isNameValid,
+                                'border-red-500 bg-red-50/30 focus:shadow-[0_0_0_4px_rgba(239,68,68,0.1)]': !isNameValid && nameTouched,
+                                'border-slate-200/80 focus:border-emerald-500 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)]': !nameTouched || (name === '' && !nameTouched)
+                            }">
+        
+                        <label asp-for="Input.Username" class="floating-label absolute left-4 text-[13px] sm:text-[14px] transition-all duration-300 pointer-events-none z-10"
+                               :class="{'!text-red-500': !isNameValid && nameTouched, '!text-emerald-600': isNameValid, 'text-slate-500': !nameTouched && !isNameValid}">
+                            Full Name (e.g. DR. Jayvee Reyes)
+                        </label>
+
+                        <div x-show="isNameValid" x-transition:enter="transition-transform duration-300" x-transition:enter-start="scale-50 opacity-0" class="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500 flex items-center h-full pointer-events-none">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+
+                        <div x-show="!isNameValid && nameTouched" x-transition class="absolute right-4 top-1/2 -translate-y-1/2 text-red-500 flex items-center h-full pointer-events-none">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                    </div>
+
+                    <p x-show="!isNameValid && nameTouched" x-transition class="text-[11px] text-red-500 font-medium pl-1 mt-1">Please enter your full official name.</p>
+
+                    <span asp-validation-for="Input.Username" class="block text-[11px] text-red-500 font-medium pl-1 mt-1"></span>
+                </div>
+                
+                <div class="stagger-2">
+                    <div class="relative group">
+                        <input asp-for="Input.Email" type="text" id="email" x-model.fill="email" x-on:input="emailTouched = true" x-on:blur="emailTouched = true" placeholder=" "
+                            class="floating-input peer w-full px-4 pt-4 sm:pt-4 pb-1 h-[48px] sm:h-[50px] rounded-[14px] border-2 bg-white text-slate-900 text-[13px] sm:text-[14px] focus:outline-none transition-all duration-300 placeholder-transparent"
+                            :class="{
+                                'border-emerald-500 bg-emerald-50/30 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)]': isEmailValid,
+                                'border-red-500 bg-red-50/30 focus:shadow-[0_0_0_4px_rgba(239,68,68,0.1)]': !isEmailValid && emailTouched,
+                                'border-slate-200/80 focus:border-emerald-500 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)]': !emailTouched || (email === '' && !emailTouched)
+                            }">
+                        <label asp-for="Input.Email" class="floating-label absolute left-4 text-[13px] sm:text-[14px] transition-all duration-300 pointer-events-none z-10"
+                            :class="{'!text-red-500': !isEmailValid && emailTouched, '!text-emerald-600': isEmailValid, 'text-slate-500': !emailTouched && !isEmailValid}">
+                            Official Email Address
+                        </label>
+                        <div x-show="isEmailValid" x-transition:enter="transition-transform duration-300" x-transition:enter-start="scale-50 opacity-0" class="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500 flex items-center h-full pointer-events-none">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <div x-show="!isEmailValid && emailTouched" x-transition class="absolute right-4 top-1/2 -translate-y-1/2 text-red-500 flex items-center h-full pointer-events-none">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                    </div>
+                    <p x-show="!isEmailValid && emailTouched" x-transition class="text-[11px] text-red-500 font-medium pl-1 mt-1">Please enter a valid email format.</p>
+
+                    <span asp-validation-for="Input.Email" class="block text-[11px] text-red-500 font-medium pl-1 mt-1"></span>
+                </div>
+
+                <div class="stagger-2">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
+                        <div class="w-full">
+                            <div class="relative group">
+                                <input asp-for="Input.Password" :type="showPass ? 'text' : 'password'" id="password" x-model.fill="password" x-on:input="passTouched = true" x-on:blur="passTouched = true" placeholder=" "
+                                       class="floating-input peer w-full px-4 pt-4 pb-1 h-[48px] sm:h-[50px] rounded-[14px] border-2 bg-white text-slate-900 text-[13px] sm:text-[14px] focus:outline-none transition-all duration-300 placeholder-transparent pr-9"
+                                       :class="{
+                                    'border-emerald-500 bg-emerald-50/30 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)]': isPassValid,
+                                    'border-red-500 bg-red-50/30 focus:shadow-[0_0_0_4px_rgba(239,68,68,0.1)]': !isPassValid && passTouched,
+                                    'border-slate-200/80 focus:border-emerald-500 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)]': !passTouched || (password === '' && !passTouched)
+                                }">
+                                <label asp-for="Input.Password" class="floating-label absolute left-4 text-[13px] sm:text-[14px] transition-all duration-300 pointer-events-none z-10"
+                                       :class="{'!text-red-500': !isPassValid && passTouched, '!text-emerald-600': isPassValid, 'text-slate-500': !passTouched && !isPassValid}">
+                                    Password
+                                </label>
+                                <button type="button" x-on:click="showPass = !showPass" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-600 transition-colors focus:outline-none h-full p-1"
+                                        :class="{'!text-red-500': !isPassValid && passTouched}">
+                                    <svg x-show="!showPass" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                    <svg x-show="showPass" class="w-5 h-5" style="display:none;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.05 10.05 0 011.563-3.026m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.048 10.048 0 01-3.7 4.618m-3.59-3.59l3.59 3.59" /></svg>
+                                </button>
+                            </div>
+
+                            <div class="flex gap-1 mt-1.5 w-full pl-1 pr-1 h-1.5" x-show="password.length > 0" x-transition>
+                                <div class="h-full flex-1 rounded-full transition-colors duration-300" :class="passStrength >= 1 ? 'bg-red-400' : 'bg-slate-200'"></div>
+                                <div class="h-full flex-1 rounded-full transition-colors duration-300" :class="passStrength >= 2 ? 'bg-orange-400' : 'bg-slate-200'"></div>
+                                <div class="h-full flex-1 rounded-full transition-colors duration-300" :class="passStrength >= 3 ? 'bg-yellow-400' : 'bg-slate-200'"></div>
+                                <div class="h-full flex-1 rounded-full transition-colors duration-300" :class="passStrength >= 4 ? 'bg-emerald-500' : 'bg-slate-200'"></div>
+                            </div>
+                            <p x-show="!isPassValid && passTouched" x-transition class="text-[11px] text-red-500 font-medium pl-1 mt-1">Minimum 8 characters.</p>
+
+
+                        </div>
+
+                        <div class="w-full">
+                            <div class="relative group">
+                                <input asp-for="Input.ConfirmPassword" :type="showConfirm ? 'text' : 'password'" id="confirm" x-model.fill="confirm" x-on:input="confirmTouched = true" x-on:blur="confirmTouched = true" placeholder=" "
+                                       class="floating-input peer w-full px-4 pt-4 pb-1 h-[48px] sm:h-[50px] rounded-[14px] border-2 bg-white text-slate-900 text-[13px] sm:text-[14px] focus:outline-none transition-all duration-300 placeholder-transparent pr-9"
+                                       :class="{
+                                       'border-emerald-500 bg-emerald-50/30 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)]' : isPassMatch && confirm.length> 0,
+                                'border-red-500 bg-red-50/30 focus:shadow-[0_0_0_4px_rgba(239,68,68,0.1)]': !isPassMatch && confirmTouched,
+                                'border-slate-200/80 focus:border-emerald-500 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)]': !confirmTouched || (confirm === '' && !confirmTouched)
+                                }">
+                                <label asp-for="Input.ConfirmPassword" class="floating-label absolute left-4 text-[13px] sm:text-[14px] transition-all duration-300 pointer-events-none z-10"
+                                       :class="{'!text-red-500': !isPassMatch && confirmTouched, '!text-emerald-600': isPassMatch && confirm.length > 0, 'text-slate-500': !confirmTouched && !isPassMatch}">
+                                    Confirm
+                                </label>
+                                <div x-show="isPassMatch && confirm.length > 0" x-transition class="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 flex items-center h-full pointer-events-none">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <div x-show="!isPassMatch && confirmTouched" x-transition class="absolute right-3 top-1/2 -translate-y-1/2 text-red-500 flex items-center h-full pointer-events-none">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                            </div>
+                            <p x-show="!isPassMatch && confirmTouched" x-transition class="text-[11px] text-red-500 font-medium pl-1 mt-1">Passwords do not match.</p>
+                        </div>
+                    </div>
+            
+                
+                    <span asp-validation-for="Input.ConfirmPassword" class="block text-[11px] text-red-500 font-medium pl-1 mt-1"></span>
+                </div>
+
+                <div class="stagger-2 relative" :style="dropdownOpen ? 'z-index: 99;' : 'z-index: 1;'">
+                    <div class="relative group w-full">
+                        <input asp-for="Input.Role" type="hidden" x-model.fill="dropdownSelected"
+                        x-init="$nextTick(() => {
+                        if(dropdownSelected) {
+                        let opt = dropdownOptions.find(o => o.val === dropdownSelected);
+                        if(opt) dropdownLabel = opt.text;
+                        }
+                        })">
+
+                        <button type="button"
+                                x-on:click="dropdownOpen = !dropdownOpen; if(!dropdownOpen) dropdownTouched = true"
+                                x-on:click.outside="if(dropdownOpen) { dropdownOpen = false; dropdownTouched = true; }"
+                                class="w-full px-4 pt-4 sm:pt-4 pb-1 h-[48px] sm:h-[50px] rounded-[14px] border-2 bg-white text-[13px] sm:text-[14px] focus:outline-none transition-all duration-300 text-left flex justify-between items-center relative"
+                                :class="{
+                            'border-emerald-500 bg-emerald-50/30 shadow-[0_0_0_4px_rgba(16,185,129,0.1)]': isDropdownValid && !dropdownOpen,
+                            'border-emerald-500 ring-4 ring-emerald-500/20 bg-white': dropdownOpen,
+                            'border-red-500 bg-red-50/30 text-red-900 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]': !isDropdownValid && dropdownTouched && !dropdownOpen,
+                            'border-slate-200/80 text-slate-900 hover:border-emerald-500': !dropdownTouched && !dropdownOpen && !isDropdownValid
+                        }">
+
+                            <span x-text="dropdownSelected === '' ? '' : dropdownLabel" class="truncate font-medium relative z-20 w-[90%]"></span>
+
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center pointer-events-none">
+                                <svg x-show="(!dropdownTouched && !isDropdownValid) || dropdownOpen" class="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300" :class="dropdownOpen ? 'rotate-180 text-emerald-500' : 'text-slate-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                <svg x-show="isDropdownValid && !dropdownOpen" x-transition:enter="transition-transform duration-300" x-transition:enter-start="scale-50 opacity-0" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                                <svg x-show="!isDropdownValid && dropdownTouched && !dropdownOpen" x-transition class="w-4 h-4 sm:w-5 sm:h-5 text-red-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                        </button>
+
+                        <label class="absolute left-4 transition-all duration-300 pointer-events-none z-10"
+                               :class="{
+                           'top-1 sm:top-1.5 text-[10px] sm:text-[11px] font-bold': dropdownOpen || dropdownSelected !== '',
+                           'top-1/2 -translate-y-1/2 text-[13px] sm:text-[14px]': !dropdownOpen && dropdownSelected === '',
+                           '!text-red-500': !isDropdownValid && dropdownTouched && !dropdownOpen,
+                           '!text-emerald-600': (dropdownOpen || isDropdownValid) && !(!isDropdownValid && dropdownTouched && !dropdownOpen),
+                           'text-slate-500': !dropdownTouched && !dropdownOpen && !isDropdownValid
+                            }">
+                            Select Role
+                        </label>
+
+                        <div x-show="dropdownOpen"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                             x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                             class="alpine-dropdown-menu absolute left-0 right-0 mt-2 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-[1rem] shadow-2xl overflow-hidden z-50" style="display: none;">
+                            <ul class="py-2 max-h-52 overflow-y-auto">
+                                <template x-for="option in dropdownOptions" :key="option.val">
+                                    <li x-on:click="dropdownSelected = option.val; dropdownLabel = option.text; dropdownOpen = false; dropdownTouched = true"
+                                        class="px-5 py-3 text-[13px] sm:text-[14px] cursor-pointer transition-colors flex items-center justify-between"
+                                        :class="dropdownSelected === option.val ? 'bg-emerald-50 text-emerald-700 font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'">
+                                        <span x-text="option.text"></span>
+                                        <svg x-show="dropdownSelected === option.val" class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p x-show="!isDropdownValid && dropdownTouched && !dropdownOpen" x-transition class="text-[11px] text-red-500 font-medium pl-1 mt-1">Please select an option.</p>
+                    <span asp-validation-for="Input.Role" class="block text-[11px] text-red-500 font-medium pl-1 mt-1"></span>
+                </div>
+
+                <div class="stagger-3 pt-2">
+                    <button type="submit" 
+                        class="btn-shine relative w-full overflow-hidden bg-brand text-white font-bold text-[14px] sm:text-base py-2.5 sm:py-3 rounded-[14px] shadow-[0_8px_15px_rgba(5,150,105,0.25)] hover:shadow-[0_12px_25px_rgba(5,150,105,0.4)] active:scale-[0.97] transition-all duration-300 flex justify-center items-center"
+                        :class="{'opacity-80 cursor-wait': loading}"
+                        :disabled="loading">
+            
+                        <span x-show="!loading" class="flex items-center gap-2">
+                            Submit Request
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+
+                        <div x-show="loading" style="display:none;" class="flex items-center gap-2">
+                            <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            Sending...
+                        </div>
+                    </button>
+                </div>
+            </form>
+                
+            <div class="mt-5 sm:mt-6 text-center stagger-3 relative z-20">
+                <p class="text-slate-500 text-[12px] sm:text-[13px] font-medium">Already have access? <a asp-area="Identity" asp-page="/Account/Login" class="text-emerald-600 font-bold hover:underline hover:text-emerald-800 transition-colors">Sign in here</a></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/js/main.js"></script>
+}
+

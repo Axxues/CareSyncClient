@@ -1,0 +1,306 @@
+/* ==========================================================================
+   CareSync Enterprise - Global Stylesheet
+   ========================================================================== */
+
+/* ---------- Base Typography & Scrollbar ---------- */
+body { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    background-color: #f8fafc; 
+}
+
+::-webkit-scrollbar { 
+    width: 6px; 
+    height: 6px; 
+}
+::-webkit-scrollbar-track { 
+    background: transparent; 
+}
+::-webkit-scrollbar-thumb { 
+    background: #cbd5e1; 
+    border-radius: 10px; 
+}
+::-webkit-scrollbar-thumb:hover { 
+    background: #94a3b8; 
+}
+
+/* ---------- Brand Colors ---------- */
+.text-brand {
+    color: #059669;
+}
+
+.bg-brand {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+/* ---------- Glassmorphism Cards & Headers ---------- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.glass-header { 
+    background: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(10px); 
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8); 
+}
+
+/* ---------- Form Inputs (Standard / Dashboard) ---------- */
+/* ---------- Form Inputs (Standard / Dashboard) ---------- */
+.form-input {
+    width: 100%; 
+    padding: 0.75rem 1rem; 
+    border-radius: 0.75rem; 
+    border: 1.5px solid #e2e8f0;
+    background-color: #f8fafc; 
+    color: #0f172a; 
+    font-size: 0.875rem; 
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+.form-input:focus { 
+    outline: none; 
+    border-color: #10b981; 
+    background-color: #ffffff; 
+    box-shadow: 0 0 0 4px rgba(16,185,129,0.1); 
+}
+.form-label { 
+    display: block; 
+    font-size: 0.875rem; 
+    font-weight: 700; 
+    color: #475569; 
+    margin-bottom: 0.5rem; 
+}
+
+/* --- ENHANCED: Custom Dropdown (Select) Styling --- */
+select.form-input {
+    appearance: none; /* Removes native OS styling */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* Custom embedded SVG Chevron */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 1rem center;
+    background-repeat: no-repeat;
+    background-size: 1.25em 1.25em;
+    padding-right: 2.5rem; /* Make room for the arrow */
+    cursor: pointer;
+}
+select.form-input:focus {
+    /* Changes arrow color to emerald on focus */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2310b981' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+}
+
+/* --- ENHANCED: Custom Date Picker Styling --- */
+input[type="date"].form-input {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+/* Styling the native calendar icon in WebKit browsers (Chrome, Edge, Safari) */
+input[type="date"].form-input::-webkit-calendar-picker-indicator {
+    background-color: transparent;
+    padding: 0.2rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+input[type="date"].form-input:hover::-webkit-calendar-picker-indicator,
+input[type="date"].form-input:focus::-webkit-calendar-picker-indicator {
+    opacity: 1; /* Icon darkens when interacted with */
+}
+input[type="date"].form-input::-webkit-datetime-edit {
+    padding-right: 0.5rem;
+}
+
+/* ---------- Form Inputs (Floating Labels / Auth) ---------- */
+input::-ms-reveal, 
+input::-ms-clear { 
+    display: none !important; 
+}
+
+.floating-label { 
+    transform-origin: left top; 
+    pointer-events: none; 
+}
+.floating-input:placeholder-shown + .floating-label { 
+    top: 50%; 
+    transform: translateY(-50%) scale(1); 
+    color: #94a3b8; 
+}
+.floating-input:not(:placeholder-shown) + .floating-label, 
+.floating-input:focus + .floating-label { 
+    top: 6px; 
+    transform: translateY(0) scale(0.75); 
+    color: #059669; 
+    font-weight: 700; 
+}
+
+/* ---------- Button Shine Effect ---------- */
+.btn-shine::after { 
+    content: ''; 
+    position: absolute; 
+    top: 0; 
+    left: -100%; 
+    width: 50%; 
+    height: 100%; 
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%); 
+    transform: skewX(-20deg); 
+    transition: all 0.7s ease; 
+}
+.btn-shine:hover::after { 
+    left: 200%; 
+}
+
+/* ---------- Background Animations ---------- */
+/* Cinematic Panning */
+@keyframes panImage { 
+    0% { transform: scale(1.05) translate(0, 0); } 
+    50% { transform: scale(1.15) translate(-2%, 2%); } 
+    100% { transform: scale(1.05) translate(0, 0); } 
+}
+.animate-pan { animation: panImage 40s ease-in-out infinite; }
+
+/* Ambient Moving Blobs */
+@keyframes blob { 
+    0% { transform: translate(0px, 0px) scale(1); } 
+    33% { transform: translate(60px, -60px) scale(1.15); } 
+    66% { transform: translate(-40px, 40px) scale(0.85); } 
+    100% { transform: translate(0px, 0px) scale(1); } 
+}
+
+.animate-blob {
+    animation: blob 7s infinite alternate ease-in-out;
+}
+
+.animation-delay-2000 {
+    animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+    animation-delay: 4s;
+}
+
+/* Parallax Blob (For Access Denied Page) */
+.parallax-blob {
+    transition: transform 0.15s ease-out;
+}
+
+/* ---------- Interactive Animations ---------- */
+/* Shaking Icon (For Access Denied Page) */
+.hover-shake:hover { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0) rotate(-2deg); }
+    20%, 80% { transform: translate3d(2px, 0, 0) rotate(2deg); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0) rotate(-4deg); }
+    40%, 60% { transform: translate3d(4px, 0, 0) rotate(4deg); }
+}
+
+/* Staggered Entrance Animations (Used across all pages) */
+@keyframes slideUpFade { 
+    to { opacity: 1; transform: translateY(0); } 
+}
+.stagger-1 {
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.05s forwards;
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+.stagger-2 {
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+.stagger-3 {
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+/* ==========================================================================
+   Custom Plugin Overrides (Flatpickr & Alpine)
+   ========================================================================== */
+
+/* Premium Theme Overrides for Flatpickr */
+.flatpickr-calendar {
+    border: none !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    border-radius: 1.25rem !important;
+    padding: 10px !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+    background: #10b981 !important; /* CareSync Emerald */
+    border-color: #10b981 !important;
+}
+
+.flatpickr-month { 
+    margin-bottom: 10px; 
+}
+
+/* Ensure custom Alpine dropdowns float above everything else */
+.alpine-dropdown-menu { 
+    z-index: 50; 
+}
+
+/* ==========================================================================
+   Custom Plugin Overrides (Flatpickr & Alpine)
+   ========================================================================== */
+
+/* Premium Theme Overrides for Flatpickr */
+.flatpickr-calendar {
+    border: none !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    border-radius: 1.25rem !important;
+    /* FIX: Removed horizontal padding and explicitly widened the container to fit the custom font */
+    padding: 12px 0 !important;
+    width: 320px !important;
+    box-sizing: border-box !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* FIX: Ensure all internal grids stretch to the new safe width */
+.flatpickr-innerContainer, 
+.flatpickr-rContainer, 
+.dayContainer, 
+.flatpickr-days {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    justify-content: center !important;
+}
+
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+    background: #10b981 !important; /* CareSync Emerald */
+    border-color: #10b981 !important;
+}
+
+.flatpickr-month { 
+    margin-bottom: 10px !important; 
+}
+
+/* Ensure custom Alpine dropdowns float above everything else */
+.alpine-dropdown-menu { 
+    z-index: 50; 
+}
+
+/* Custom Scrollbar for the Timeline */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1; /* slate-300 */
+    border-radius: 10px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: #94a3b8; /* slate-400 */
+}

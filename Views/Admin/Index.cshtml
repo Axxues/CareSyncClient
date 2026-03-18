@@ -1,0 +1,230 @@
+﻿@model AdminDashboardViewModel
+
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "StaffAccounts";
+}
+
+<div x-data="{ showApproveModal: false, userToApprove: '' }">
+
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 stagger-1">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Account Approvals</h1>
+            <p class="text-slate-500 mt-1 font-medium">Review and activate newly registered health center staff.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8 stagger-2">
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-amber-100 bg-amber-50/30 flex items-center gap-4 relative overflow-hidden">
+            <div class="absolute right-0 top-0 w-2 h-full bg-amber-500"></div>
+            <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+                <p class="text-sm font-bold text-amber-600 uppercase tracking-wider">Pending Action</p>
+                <h3 class="text-2xl font-extrabold text-slate-900">@Model.TotalPendingAction <span class="text-sm font-bold text-slate-500 ml-1">Requests</span></h3>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+                <p class="text-sm font-bold text-slate-500 uppercase tracking-wider">Total Accounts</p>
+                <h3 class="text-2xl font-extrabold text-slate-900">@Model.TotalAccounts</h3>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            </div>
+            <div>
+                <p class="text-sm font-bold text-slate-500 uppercase tracking-wider">Total Active Staff</p>
+                <h3 class="text-2xl font-extrabold text-slate-900">@Model.TotalActiveStaff</h3>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="Index" method="get">
+        <div class="bg-white p-4 rounded-[1.25rem] shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row gap-4 stagger-3 relative z-30">
+            <div class="flex-1 relative">
+                <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input name="s" type="text" placeholder="Search by name or email..." value="@Model.PaginatedPendingUsers.SearchKeyword" class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium placeholder-slate-400">
+            </div>
+
+            @* <div x-data="{
+                            open: false,
+                            selected: 'Pending',
+                            label: 'Status: Pending',
+                            options: [
+                                { val: '', text: 'All Statuses' },
+                                { val: 'Pending', text: 'Status: Pending' },
+                                { val: 'Active', text: 'Status: Active' }
+                            ]
+                        }" class="relative w-full md:w-56">
+                <input type="hidden" name="status_filter" :value="selected">
+                <button type="button" x-on:click="open = !open" x-on:click.outside="open = false"
+                        class="w-full py-2.5 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all text-left flex justify-between items-center h-[42px]"
+                        :class="open ? 'ring-2 ring-emerald-500/20 border-emerald-500 bg-white' : ''">
+                    <span x-text="label"></span>
+                    <svg class="w-4 h-4 text-slate-400 transition-transform duration-300" :class="open ? 'rotate-180 text-emerald-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+
+                <div x-show="open"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                     x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                     x-transition:leave="transition ease-in duration-150"
+                     x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                     x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                     class="alpine-dropdown-menu absolute right-0 left-0 md:left-auto mt-2 md:w-64 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-xl overflow-hidden" style="display: none;">
+                    <ul class="py-1">
+                        <template x-for="option in options" :key="option.val">
+                            <li x-on:click="selected = option.val; label = option.text; open = false"
+                                class="px-4 py-2.5 text-sm cursor-pointer transition-colors flex items-center justify-between"
+                                :class="selected === option.val ? 'bg-emerald-50 text-emerald-700 font-bold' : 'text-slate-600 font-medium hover:bg-slate-50 hover:text-slate-900'">
+                                <span x-text="option.text"></span>
+                                <svg x-show="selected === option.val" class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div> *@
+            <div class="relative w-full md:w-48">
+                <button class="w-full flex-1 sm:flex-none h-10 px-4 inline-flex justify-center items-center border border-slate-200 rounded-lg text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 transition-colors">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-200 overflow-hidden stagger-4 relative z-20">
+        <div class="overflow-x-auto w-full">
+            <table class="w-full text-left border-collapse">
+                <thead class="hidden md:table-header-group">
+                    <tr class="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-100">
+                        <th class="px-6 py-4 font-bold">User Details</th>
+                        <th class="px-6 py-4 font-bold">Requested Role</th>
+                        <th class="px-6 py-4 font-bold">Account Status</th>
+                        <th class="px-6 py-4 font-bold text-center">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100 text-sm font-medium text-slate-700 flex flex-col md:table-row-group">
+                    @foreach (var user in Model.PaginatedPendingUsers.Result)
+                    {
+                        <tr class="flex flex-col md:table-row hover:bg-slate-50 transition-colors group cursor-default p-5 md:p-0">
+                            <td class="order-1 md:order-none md:px-6 md:py-4 mb-4 md:mb-0 border-b border-slate-50 md:border-none pb-4 md:pb-0">
+                                <div class="flex items-center gap-4 md:gap-3">
+                                    <div class="w-12 h-12 md:w-10 md:h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-lg md:text-sm shrink-0">
+                                        @(string.IsNullOrEmpty(user.Username) ? "?" : user.Username.Substring(0, 1).ToUpper())
+                                    </div>
+                                    <div>
+                                        <p class="text-slate-900 font-bold text-base md:text-sm">@user.Username</p>
+                                        <p class="text-slate-500 text-xs font-semibold md:font-normal mt-0.5">@user.Email</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="order-3 md:order-none md:px-6 md:py-4 mb-2 md:mb-0 flex justify-between md:table-cell items-center">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider md:hidden">Role</span>
+                                <span class="text-slate-600 font-bold">
+                                    @(user.Roles.Any() ? string.Join(", ", user.Roles) : "None")
+                                </span>
+                            </td>
+
+                            <td class="order-2 md:order-none md:px-6 md:py-4 mb-3 md:mb-0 flex justify-between md:table-cell items-center">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider md:hidden">Status</span>
+                                <div class="text-right md:text-left">
+                                    <span class="inline-block px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-100 text-amber-700 animate-pulse">Pending Review</span>
+                                </div>
+                            </td>
+
+                            <td class="order-5 md:order-none md:px-6 md:py-4 border-t border-slate-100 md:border-none pt-4 md:pt-0">
+                                <div class="flex justify-between md:justify-center items-center gap-3 md:gap-2">
+
+                                    <button type="button" x-on:click="showApproveModal = true; userToApprove = '@user.Id'" class="flex-1 md:flex-none flex justify-center items-center gap-2 p-2.5 md:p-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 hover:shadow-sm rounded-lg transition-all font-bold md:font-normal text-sm" title="Approve & Activate">
+                                        <svg class="w-5 h-5 md:w-5 md:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                                        <span class="md:hidden">Approve</span>
+                                    </button>
+
+                                    @* <button class="flex-1 md:flex-none flex justify-center items-center gap-2 p-2.5 md:p-2 bg-red-50 text-red-600 hover:bg-red-100 hover:shadow-sm rounded-lg transition-all font-bold md:font-normal text-sm" title="Reject Request">
+                                        <svg class="w-5 h-5 md:w-5 md:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        <span class="md:hidden">Reject</span>
+                                    </button> *@
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @{
+            var pageActive = "flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-slate-200 rounded-lg text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 transition-colors";
+            var pageInactive = "flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-slate-200 rounded-lg text-sm font-bold text-slate-400 bg-white cursor-not-allowed";
+        }
+        <div class="px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between bg-slate-50/50 gap-4 sm:gap-0">
+            <p class="text-sm text-slate-500 font-medium">Showing 1 to @Model.PaginatedPendingUsers.Result.Count() of @Model.PaginatedPendingUsers.TotalRecords patients</p>
+            <div class="flex gap-2 w-full sm:w-auto">
+                <a asp-route-p="@(Model.PaginatedPendingUsers.Page - 1)" asp-route-s="@Model.PaginatedPendingUsers.SearchKeyword" class="@(Model.PaginatedPendingUsers.Page == 1 ? pageInactive : pageActive)">
+                    Prev
+                </a>
+
+                @for (var pageNumber = 1; pageNumber <= Model.PaginatedPendingUsers.TotalCount; pageNumber++)
+                {
+                    if (pageNumber == Model.PaginatedPendingUsers.Page)
+                    {
+                        <span class="@pageInactive">
+                            @pageNumber
+                        </span>
+                    }
+                    else
+                    {
+                        <a asp-route-p="@pageNumber" asp-route-s="@Model.PaginatedPendingUsers.SearchKeyword" class="@pageActive">
+                            @pageNumber
+                        </a>
+                    }
+                }
+
+                <a asp-route-p="@(Model.PaginatedPendingUsers.Page + 1)" asp-route-s="@Model.PaginatedPendingUsers.SearchKeyword" class="@(Model.PaginatedPendingUsers.Page == Model.PaginatedPendingUsers.TotalCount ? pageInactive : pageActive)">
+                    Next
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed inset-0 z-[100] flex items-center justify-center" style="display: none;" x-show="showApproveModal">
+
+        <div x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm"
+             x-on:click="showApproveModal = false"></div>
+
+        <div x-transition:enter="transition ease-out duration-300 delay-75" x-transition:enter-start="opacity-0 translate-y-8 scale-95" x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0 scale-100" x-transition:leave-end="opacity-0 translate-y-8 scale-95"
+             class="relative bg-white w-full max-w-[340px] mx-4 p-6 rounded-[1.5rem] shadow-2xl border border-slate-100 flex flex-col items-center text-center z-10">
+
+            <div class="flex flex-col items-center w-full">
+                <div class="w-14 h-14 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center mb-4 border-4 border-white shadow-[0_0_0_4px_rgba(16,185,129,0.15)]">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+
+                <h3 class="text-[18px] font-extrabold text-slate-900 tracking-tight mb-1.5">Validate This User?</h3>
+                <p class="text-[13px] text-slate-500 mb-6 leading-relaxed">Are you sure you want to activate this account?</p>
+
+                <button type="button" x-on:click="showApproveModal = false" class="mb-2 w-full py-3 px-4 rounded-[12px] text-[13px] font-bold text-slate-600 bg-slate-50 hover:bg-slate-100 transition-colors focus:outline-none">
+                    No, Cancel
+                </button>
+
+                <form asp-action="ActivateAccount" method="post" class="w-full">
+                    <input type="hidden" name="userId" x-bind:value="userToApprove" />
+                    <button type="submit" class="w-full py-3 px-4 rounded-[12px] text-[13px] font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-[0_8px_15px_rgba(5,150,105,0.2)] transition-all focus:outline-none">
+                        Yes, Validate User
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

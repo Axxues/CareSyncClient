@@ -1,0 +1,121 @@
+﻿@model DispenseLogDashboard
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Inventory";
+}
+
+@section LayoutScripts {
+   
+}
+
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 stagger-1">
+    <div>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Dispense Log</h1>
+        <p class="text-slate-500 mt-1 font-medium">Track medications issued to patients from the inventory.</p>
+    </div>
+    <a asp-controller="Inventory" asp-action="Dispense" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl shadow-[0_8px_15px_rgba(5,150,105,0.2)] hover:-translate-y-0.5 transition-all">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+        New Dispense
+    </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8 stagger-2">
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+        </div>
+        <div>
+            <p class="text-sm font-bold text-slate-500 uppercase tracking-wider">Dispensed Today</p>
+            <h3 class="text-2xl font-extrabold text-slate-900">@Model.TotalDispensedToday <span class="text-sm font-bold text-slate-500 ml-1">Transactions</span></h3>
+        </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        </div>
+        <div>
+            <p class="text-sm font-bold text-slate-500 uppercase tracking-wider">Patients Served</p>
+            <h3 class="text-2xl font-extrabold text-slate-900">@Model.PatientsServedToday <span class="text-sm font-bold text-slate-500 ml-1">Today</span></h3>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white rounded-[1.5rem] shadow-sm border border-slate-200 overflow-hidden stagger-3 relative z-20">
+    <div class="overflow-x-auto w-full">
+        <table class="w-full text-left border-collapse">
+            <thead class="hidden md:table-header-group">
+                <tr class="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-100">
+                    <th class="px-6 py-4 font-bold">Date Dispensed</th>
+                    <th class="px-6 py-4 font-bold">Patient</th>
+                    <th class="px-6 py-4 font-bold">Medication Dispensed</th>
+                    <th class="px-6 py-4 font-bold">Dispensed By</th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y divide-slate-100 text-sm font-medium text-slate-700 flex flex-col md:table-row-group">
+                @foreach(var log in Model.InventoryDispenseDetail.Result)
+                {
+                    <tr class="flex flex-col md:table-row hover:bg-slate-50 transition-colors group p-5 md:p-0">
+                        <td class="order-1 md:order-none md:px-6 md:py-4 mb-2 md:mb-0">
+                            <p class="text-slate-900 font-bold">@DateTime.Parse(log.DateDispensed).ToString("MMM dd, yyyy")</p>
+                            <p class="text-slate-500 text-xs mt-0.5">ID: @log.Id</p>
+                        </td>
+                        <td class="order-2 md:order-none md:px-6 md:py-4 mb-4 md:mb-0 border-b border-slate-50 md:border-none pb-4 md:pb-0">
+                            <p class="text-emerald-700 font-bold">@log.PatientInfo.FirstName @log.PatientInfo.LastName</p>
+                        </td>
+                        <td class="order-3 md:order-none md:px-6 md:py-4 mb-3 md:mb-0 flex justify-between md:table-cell items-center">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider md:hidden">Medication</span>
+                            <div class="text-right md:text-left">
+                                <p class="font-extrabold text-slate-900">@log.StockDetail.ItemDetail.GenericName <span class="text-emerald-600 ml-1">x @log.Quantity</span></p>
+                                <p class="text-slate-500 text-xs mt-0.5">@log.Instructions</p>
+                            </div>
+                        </td>
+                        <td class="order-4 md:order-none md:px-6 md:py-4 flex justify-between md:table-cell items-center">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider md:hidden">Dispensed By</span>
+                            <span class="text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg text-xs font-bold">Midwife Sarah</span>
+                        </td>
+                    </tr>
+                    
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @{
+        var pageActive = "flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-slate-200 rounded-lg text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 transition-colors";
+        var pageInactive = "flex-1 sm:flex-none inline-flex justify-center items-center px-4 py-2 border border-slate-200 rounded-lg text-sm font-bold text-slate-400 bg-white cursor-not-allowed";
+    }
+    <div class="px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between bg-slate-50/50 gap-4 sm:gap-0">
+        <p class="text-sm text-slate-500 font-medium">Showing 1 to @Model.InventoryDispenseDetail.Result.Count() of @Model.InventoryDispenseDetail.TotalRecords patients</p>
+        <div class="flex gap-2 w-full sm:w-auto">
+            <a asp-route-p="@(Model.InventoryDispenseDetail.Page - 1)" class="@(Model.InventoryDispenseDetail.Page == 1 ? pageInactive : pageActive)">
+                Prev
+            </a>
+
+            @for (var pageNumber = 1; pageNumber <= Model.InventoryDispenseDetail.TotalCount; pageNumber++)
+            {
+                if (pageNumber == Model.InventoryDispenseDetail.Page)
+                {
+                    <span class="@pageInactive">
+                        @pageNumber
+                    </span>
+                }
+                else
+                {
+                    <a asp-route-p="@pageNumber" class="@pageActive">
+                        @pageNumber
+                    </a>
+                }
+            }
+
+            <a asp-route-p="@(Model.InventoryDispenseDetail.Page + 1)" class="@(Model.InventoryDispenseDetail.Page == Model.InventoryDispenseDetail.TotalCount ? pageInactive : pageActive)">
+                Next
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/js/main.js"></script>
+}
