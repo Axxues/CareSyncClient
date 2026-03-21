@@ -7,6 +7,7 @@ using System.Diagnostics;
 
 namespace CareSync.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IBaseRepository<PatientPersonalInformation> _ppirepo;

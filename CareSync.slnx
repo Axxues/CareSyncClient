@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="CareSync.csproj" />
+  <Project Path="CareSync.csproj">
+    <BuildType Project="Release" />
+  </Project>
 </Solution>

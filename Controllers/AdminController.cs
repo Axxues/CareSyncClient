@@ -1,9 +1,11 @@
 ﻿using CareSync.Common;
 using CareSync.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore; // Ensure this is at the top
 
+[Authorize(Roles = "Admin")]
 public class AdminController : Controller
 {
     private readonly UserManager<IdentityUser> _userManager;
